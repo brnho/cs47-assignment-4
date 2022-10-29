@@ -29,7 +29,7 @@ const fetcher = async (url, token) => {
 export const getMyTopTracks = async (token) => {
   const cache = { data: { items: CachedTopTracks } };
   try {
-    let res = await fetcher(SHORT_TERM_API, token);
+    let res = await fetcher(LONG_TERM_API, token);
     if (!res || !res.data?.items.length) res = await fetcher(LONG_TERM_API, token);
     if (!res || !res.data?.items.length) res = cache;
     return res.data?.items;
