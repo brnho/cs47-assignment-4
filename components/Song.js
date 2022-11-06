@@ -1,23 +1,31 @@
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import millisToMinutesAndSeconds from '../utils/millisToMinutesAndSeconds';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function Song({ track, index }) {
+export default function Song({ track, navigation }) {
   return (
     <>
       {track && (
-        <View style={styles.container}>
-          <Text style={[styles.text, styles.index]}>{index + 1}</Text>
-          <Image
-            style={styles.image}
-            source={{ uri: track.album.images[0].url }}
-          />
-          <View style={styles.songInfo}>
-            <Text style={styles.text} numberOfLines={1}>{track.name}</Text>
-            <Text style={[styles.text, styles.artist]} numberOfLines={1}>{track.artists[0].name}</Text>
+        <Pressable onPress={() => { navigation.navigate('SongDetail', { url: track.external_urls.spotify })}}>
+          <View style={styles.container}>
+            <Pressable onPress={(e) => {
+              e.stopPropagation();
+              navigation.navigate('SongPreview', { url: track.preview_url });
+            }}>
+              <Ionicons style={styles.icon} name="caret-forward-circle" size={25}></Ionicons>
+            </Pressable>
+            <Image
+              style={styles.image}
+              source={{ uri: track.album.images[0].url }}
+            />
+            <View style={styles.songInfo}>
+              <Text style={styles.text} numberOfLines={1}>{track.name}</Text>
+              <Text style={[styles.text, styles.artist]} numberOfLines={1}>{track.artists[0].name}</Text>
+            </View>
+            <Text style={[styles.text, styles.albumName]} numberOfLines={1}>{track.album.name}</Text>
+            <Text style={[styles.text, styles.duration]}>{millisToMinutesAndSeconds(track.duration_ms)}</Text>
           </View>
-          <Text style={[styles.text, styles.albumName]} numberOfLines={1}>{track.album.name}</Text>
-          <Text style={[styles.text, styles.duration]}>{millisToMinutesAndSeconds(track.duration_ms)}</Text>
-        </View>
+        </Pressable>
       )}
     </>
   );
@@ -35,9 +43,10 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
   },
-  index: {
-    paddingLeft: 20,
+  icon: {
+    //paddingLeft: 20,
     paddingRight: 20,
+    color: '#1DB954',
   },
   songInfo: {
     paddingLeft: 20,
